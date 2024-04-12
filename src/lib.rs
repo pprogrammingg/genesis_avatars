@@ -7,7 +7,8 @@ pub struct GatData {
 
 #[derive(ScryptoSbor, NonFungibleData)]
 pub struct ClaimData {
-    claimable_after_instant: Instant,
+    sequence: u16,
+    issued_on_instant: Instant,
 }
 
 #[blueprint]
@@ -97,6 +98,7 @@ mod genesis_avatar {
                 gat_resource_manager,
                 claim_badge_resource_manager,
                 claimable_after_days: 3u8,
+                sequence: 0u16,
             }
             .instantiate()
             .prepare_to_globalize(OwnerRole::None)
@@ -121,16 +123,17 @@ mod genesis_avatar {
 
             self.genav_frozen_vault.put(genav_bucket);
 
-            for i in 0..=genav_amount {
+            for i in 0..= 3 {
                 self.sequence += 1;
             
-                let new_claim_data = ClaimNFT {
+                let new_claim_data = ClaimData {
                     sequence: self.sequence,
                     issued_on_instant: Clock::current_time_rounded_to_minutes(),
                 };
-
-
+                self.gat_resource_manager.mint_ruid_non_fungible(new_claim_data);
             }
+
+            self.gat_resource_manager.mint_ruid_non_fungible(ClaimData{sequence : 0u16, issued_on_instant: Clock::current_time_rounded_to_minutes()})
                               
         }
     }
