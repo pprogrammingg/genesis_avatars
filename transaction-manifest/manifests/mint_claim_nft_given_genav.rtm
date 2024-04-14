@@ -1,0 +1,19 @@
+CALL_METHOD
+    Address("account_tdx_2_129k3nexq9hmzgy0z83wwc425y7lgdwmcnj5qs7xc9nk5w4xwc7u6pd")
+    "withdraw"
+    Address("resource_tdx_2_1t5grzue5tkek39xuhq9rslkt2hwfez7l9yyzk234zaawl5gxk6853l")
+    Decimal("2");
+
+TAKE_ALL_FROM_WORKTOP
+    Address("resource_tdx_2_1t5grzue5tkek39xuhq9rslkt2hwfez7l9yyzk234zaawl5gxk6853l")
+    Bucket("genav_tokens");
+
+CALL_METHOD
+    Address("component_tdx_2_1cpm4gn92avy5s6q764lv78xkqpppysn7fgvzy3klk2nhl6pjdeg5xy")
+    "mint_claim_nft_given_genav"
+    Bucket("genav_tokens");
+
+CALL_METHOD
+    Address("account_tdx_2_129k3nexq9hmzgy0z83wwc425y7lgdwmcnj5qs7xc9nk5w4xwc7u6pd")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP");
