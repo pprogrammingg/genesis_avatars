@@ -24,15 +24,15 @@ mod genesis_avatar {
     }
 
     impl GenesisAvatar {
-        /**
-         * instantiate()
-         * 1. Create resource manager for Metada Updater Badge. Mint 1 and depost to instantiaor account.
-         *      a. Define an access rule based on the metadata updater badge
-         *      b. Use this rule for metadata setting of GAT NFT resourcemanager
-         * 2. Create resource manager for Genesis Avatar Token (GAT NFT)
-         * 3. Create resource manager for Claim NFTS (NFTs issued in exchange of GENAV which in turn will be used later by user to claim GAT)
-         * 4. Create a vault to keep deposits of GENAV (legacy tokens that need to be swapped with GAT)
-         */
+        ///
+        // instantiate
+        // 1. Create resource manager for Metada Updater Badge. Mint 1 and depost to instantiaor account.
+        //      a. Define an access rule based on the metadata updater badge
+        //      b. Use this rule for metadata setting of GAT NFT resourcemanager
+        // 2. Create resource manager for Genesis Avatar Token (GAT NFT)
+        // 3. Create resource manager for Claim NFTS (NFTs issued in exchange of GENAV which in turn will be used later by user to claim GAT)
+        // 4. Create a vault to keep deposits of GENAV (legacy tokens that need to be swapped with GAT)
+        //
         pub fn instantiate() -> FungibleBucket {
             let (address_reservation, component_address) =
                 Runtime::allocate_component_address(GenesisAvatar::blueprint_id());
@@ -145,18 +145,21 @@ mod genesis_avatar {
          * mint_claim_nft_given_genav
          *
          * Given GENAV tokens,for each token
-         * 1. Mint a claim NFT
+         * 0. Take the integer part of genav_bucket 
+         *  0a. If integer amount is less than 1 throw error
+         * 1. Store input genav tokens in to genav_vault
          * 2. Set claim NFT data to have:
-         *  a. issued_on_instant : equal to current instant
-         *  b. sequence: an incremental sequence number tracking the order of mint.
+         *  2a. issued_on_instant : equal to current instant
+         *  2b. sequence: an incremental sequence number tracking the order of mint.
+         * 3. Mint a claim NFT
          * Returns claim NFT to the user
          */
         pub fn mint_claim_nft_given_genav(&mut self, genav_bucket: Bucket) -> Bucket {
-            let mut claim_nfts_bucket = Bucket::new(self.gat_resource_manager.address());
+            let mut claim_nfts_bucket = Bucket::new(self.claim_badge_resource_manager.address());
+            // 0.
             let genav_amount = genav_bucket.amount();
 
-            self.genav_vault.put(genav_bucket);
-
+            // 0a.
             let genav_floor_amount = match genav_amount.checked_floor() {
                 Some(amount) => i32::try_from(amount).unwrap(),
                 None => {
@@ -164,18 +167,23 @@ mod genesis_avatar {
                 }
             };
 
-            // Assumption is that whole GENAV tokens will be provided, but in case an amount with decimals is provided we take a floor
-            for _i in 0..=genav_floor_amount {
-                self.sequence += 1;
+            // 1.
+            self.genav_vault.put(genav_bucket);
 
+            // Assumption is that whole GENAV tokens will be provided, 
+            // but in case an amount with decimals is provided we take a floor
+            for _i in 0..genav_floor_amount {
+                self.sequence += 1;
+                
+                // 1.
                 let new_claim_data = ClaimData {
                     sequence: self.sequence, // 1a.
                     issued_on_instant: Clock::current_time_rounded_to_minutes(), // 1b.
                 };
 
-                // 1.
+                // 2.
                 claim_nfts_bucket.put(
-                    self.gat_resource_manager
+                    self.claim_badge_resource_manager
                         .mint_ruid_non_fungible(new_claim_data),
                 );
             }
@@ -185,14 +193,24 @@ mod genesis_avatar {
 
         /** 
          * Given a claim NFT and  ipfs_id
-         *  1. Assert claim NFT has a valid resource address
+         *  1. Validations
+         *  1a. Assert ipfs_id is between 1 and 10000 inclusive
+         *  1b. Assert claim NFT has a valid resource address
          *  2. Assert claim NFT is redeemable based on adding a pre-determined number of days (e.g. 10) to claim_issued_on_instant field
-         *  3. mint new GAT with ipfs_id as its data
+         *  3. burn the input claim NFT
+         *  4. mint new GAT with ipfs_id as its data
          * Returns a GAT NFT
          */
         pub fn mint_gat_given_claim_nft(&mut self, claim_nft_bucket: NonFungibleBucket, ipfs_id: String) -> Bucket {
 
             // 1.
+
+            // 1a.
+            let ipfs_id_u16 = ipfs_id.parse::<u16>().unwrap();
+
+            assert!(ipfs_id_u16 >= 1 && ipfs_id_u16 <= 10000,
+                "[ERR_INVALID_IPFS_ID_RANGE] Invalid range for ipfs_id provided, must be between 1 and 10000!");
+            // 1b.
             assert!(claim_nft_bucket.resource_address() == self.claim_badge_resource_manager.address(), 
                 "[ERR_INVALID_CLAIM_NFT] Invalid claim NFT provided!");
             
@@ -200,12 +218,16 @@ mod genesis_avatar {
 
             let data: ClaimData = claim_nft.data();
             let claim_issued_on_instant: Instant = data.issued_on_instant;
-            let claim_redeemable_on_instant: Instant = claim_issued_on_instant.add_days(3).unwrap(); // add_days(10).unwrap();
+            let claimable_after_instant = claim_issued_on_instant; //.add_days(3).unwrap();
+            let claim_redeemable_on_instant: Instant = claimable_after_instant; 
             // 2.
             assert!(Clock::current_time_is_at_or_after(claim_redeemable_on_instant, TimePrecision::Minute), 
-                "[ERR_CLAIM_NFT_NOT_REDEEMABLE] Cannot process claim NFT yet, 3 days since issuance must be passed.");
+                "[ERR_CLAIM_NFT_NOT_REDEEMABLE] Too soon to process claim NFT. It is claimable after {:?}.", claimable_after_instant);
     
             // 3.
+            claim_nft_bucket.burn();
+
+            // 4.
             let new_gat_data = GatData {
                 ipfs_id: ipfs_id
             };

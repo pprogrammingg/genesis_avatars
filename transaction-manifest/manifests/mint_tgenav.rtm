@@ -1,8 +1,9 @@
 CALL_METHOD
-    Address("component_tdx_2_1cpm4gn92avy5s6q764lv78xkqpppysn7fgvzy3klk2nhl6pjdeg5xy")
+    Address("component_tdx_2_1crl29qdu8u3ng84fs9p4hp7knp5sf09apke2x4vfdgzyusk6xg09re")
     "mint_test_genav";
 
 CALL_METHOD
     Address("account_tdx_2_129k3nexq9hmzgy0z83wwc425y7lgdwmcnj5qs7xc9nk5w4xwc7u6pd")
-    "deposit_batch"
-    Expression("ENTIRE_WORKTOP");
+    "try_deposit_batch_or_abort"
+    Expression("ENTIRE_WORKTOP")
+    None;

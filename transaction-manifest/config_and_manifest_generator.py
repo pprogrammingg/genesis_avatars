@@ -53,7 +53,7 @@ def get_transaction_affected_global_entities(instantiate_transaction_id: str):
         affected_global_entities = data['transaction']['affected_global_entities']
         entities_len = len(affected_global_entities)
         # Take only component and new resource info
-        dapp_instant_values_array = affected_global_entities[1:entities_len-1]
+        dapp_instant_values_array = affected_global_entities[0:entities_len-1]
         # put instantiation tx id at the beginning
         dapp_instant_values_array.insert(0, instantiate_transaction_id)
 
@@ -123,8 +123,15 @@ def main(instantiate_transaction_id):
     print(f"Starting config_and_manifest_generator.py with transaction_id: {instantiate_transaction_id}")
 
     dapp_instant_values_array = get_transaction_affected_global_entities(instantiate_transaction_id)
-    # print(f"dapp_instant_values_array is : {json.dumps(dapp_instant_values_array, indent=4)}\n")
-    updated_global_config = update_global_config(dapp_instant_values_array)
+
+    dapp_created_components_and_resources = filtered_array = [item for item in 
+                                                                  dapp_instant_values_array 
+                                                                    if item.startswith("component_") 
+                                                                        or item.startswith("resource_")
+                                                                        or item.startswith("txid_")]
+
+    print(f"dapp_created_components_and_resources is : {json.dumps(dapp_created_components_and_resources, indent=4)}\n")
+    updated_global_config = update_global_config(dapp_created_components_and_resources)
 
     # overwrite global_config with updated values
     with open(CONFIG_FILE_PATH, 'w') as file:

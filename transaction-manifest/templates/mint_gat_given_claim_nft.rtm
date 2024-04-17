@@ -1,0 +1,23 @@
+CALL_METHOD
+    Address("<user_a_account_address>")
+    "withdraw_non_fungibles"
+    Address("<claim_badge_resource_address>")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<claim_ruid_1>")
+    );
+
+TAKE_ALL_FROM_WORKTOP
+    Address("<claim_badge_resource_address>")
+    Bucket("claim_nft");
+
+CALL_METHOD
+    Address("<component_address>")
+    "mint_gat_given_claim_nft"
+    Bucket("claim_nft")
+    "123";
+
+CALL_METHOD
+    Address("<user_a_account_address>")
+    "try_deposit_batch_or_abort"
+    Expression("ENTIRE_WORKTOP")
+    None;

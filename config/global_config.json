@@ -1,11 +1,11 @@
 {
     "dapp_instant_info": {
-        "instantiate_transaction_id": "txid_tdx_2_168fzz7fyjuc58szkg9c4qv4pqwgu6u5gtj8vd0jlsudryfsgn78sctt73z",
-        "component_address": "component_tdx_2_1cpm4gn92avy5s6q764lv78xkqpppysn7fgvzy3klk2nhl6pjdeg5xy",
-        "gat_metadata_updater_badge_resource_address": "resource_tdx_2_1t5fzzajpeau8r9kjdm3v30775hv9g4vk4ehuemtnaj2kkakmgkfexw",
-        "gat_resource_address": "resource_tdx_2_1n2rfwjqv2dazdcpp3ge07rnnuzw9qu0396pxq4cgl9hrp2z0vxyanl",
-        "claim_badge_resource_address": "resource_tdx_2_1ntzsmpm5n4rhyc2nu348p7jgmmu529m6gvl0teysd9z7yxl7gsjatz",
-        "test_genav_token_resource_address": "resource_tdx_2_1t5grzue5tkek39xuhq9rslkt2hwfez7l9yyzk234zaawl5gxk6853l"
+        "instantiate_transaction_id": "txid_tdx_2_1jfrkpust5cv6snxmd53v6hgsd6hj62gf66tz96ke6xrkwccm0teqasysw9",
+        "component_address": "component_tdx_2_1crl29qdu8u3ng84fs9p4hp7knp5sf09apke2x4vfdgzyusk6xg09re",
+        "gat_metadata_updater_badge_resource_address": "resource_tdx_2_1t4m8mt9cjxx5mw5l4ftss98stg9h3w0usvw93swyv6u3r83v8v9dnr",
+        "gat_resource_address": "resource_tdx_2_1ntss5pvsws2x7qfpmlys0ts2j4hxjulp80g9h8d9h3cr7grwvn7p0h",
+        "claim_badge_resource_address": "resource_tdx_2_1nfkcz6ckjm0xhs2fzzst9yuptxyha6378cse3n2de470tw6x62cczq",
+        "test_genav_token_resource_address": "resource_tdx_2_1t5d30phdjw23r3k87q47twam4cr0ajsqyurz2e5njx8u66xpyzktka"
     },
     "dapp_accounts": {
         "user_a_account_address": "account_tdx_2_129k3nexq9hmzgy0z83wwc425y7lgdwmcnj5qs7xc9nk5w4xwc7u6pd",
