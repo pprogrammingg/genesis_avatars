@@ -20,6 +20,7 @@ mod genesis_avatar {
         claim_badge_resource_manager: ResourceManager,
         claimable_after_days: u8,
         sequence: u16,
+        ipfs_id_assignments: [u16; 10001],
         test_genav_resource_manager: ResourceManager,
     }
 
@@ -103,7 +104,7 @@ mod genesis_avatar {
 
             // TODO temporary for testing only, rm after
             let test_genav_resource_manager = ResourceBuilder::new_fungible(OwnerRole::None)
-                .divisibility(DIVISIBILITY_NONE)
+                .divisibility(DIVISIBILITY_MAXIMUM)
                 .metadata(metadata!(
                     init {
                         "name" => "TGENAV".to_owned(), locked;
@@ -123,7 +124,7 @@ mod genesis_avatar {
             //     "resource_rdx1t5rfs8q0jsl3jn3vxn8h9r2a4h9kvyrcl5a0ee9g2gq9dmcwt826dl",
             // )
             // .unwrap();
-
+       
             // Instantiate a Hello component, populating its vault with our supply of 1000 HelloToken
             Self {
                 genav_vault: Vault::new(test_genav_resource_manager.address()), // 4.
@@ -131,6 +132,11 @@ mod genesis_avatar {
                 claim_badge_resource_manager,
                 claimable_after_days: 3u8,
                 sequence: 0u16,
+                // ipfs_id_assignments : initialize with 0. Value of 0 means ipfs_id not assigned, 1 means assigned. 
+                // Using 10_001 as array length helps, since we can set 1 or 0 for indecies 0 through 10000. This way,
+                // can check ipfs_id_assignments[123] or ipfs_id_assignments[10000] without any other index manipulation. 
+                // Note: ipfs_id_assignments[0] is not important.
+                ipfs_id_assignments: [0; 10001], 
                 test_genav_resource_manager,
             }
             .instantiate()
@@ -156,22 +162,26 @@ mod genesis_avatar {
          */
         pub fn mint_claim_nft_given_genav(&mut self, genav_bucket: Bucket) -> Bucket {
             let mut claim_nfts_bucket = Bucket::new(self.claim_badge_resource_manager.address());
+            
             // 0.
             let genav_amount = genav_bucket.amount();
-
+            
             // 0a.
+            assert!(genav_amount >= dec!(1.0), "[ERR_INVALID_GENAV_AMOUNT: invalid amount of GENAV tokens is provided. Make sure amount is greater than 1!");
+
+            // 0b.
+            // Assumption is that whole GENAV tokens will be provided, 
+            // but in case an amount with decimals is provided we take a floor
             let genav_floor_amount = match genav_amount.checked_floor() {
                 Some(amount) => i32::try_from(amount).unwrap(),
                 None => {
-                    panic!("[ERR_INVALID_GENAV_AMOUNT: invalid amount of GENAV tokens is provided. Make sure amount is greater than 1!");
+                    panic!("[ERR_FAILED_GET_INTEGER_GENAV_AMOUNT: could not extract integer amount from decimal genav amount provided!");
                 }
             };
 
             // 1.
             self.genav_vault.put(genav_bucket);
 
-            // Assumption is that whole GENAV tokens will be provided, 
-            // but in case an amount with decimals is provided we take a floor
             for _i in 0..genav_floor_amount {
                 self.sequence += 1;
                 
@@ -192,25 +202,32 @@ mod genesis_avatar {
         }
 
         /** 
-         * Given a claim NFT and  ipfs_id
+         * Given a claim NFT and ipfs_id
          *  1. Validations
          *  1a. Assert ipfs_id is between 1 and 10000 inclusive
-         *  1b. Assert claim NFT has a valid resource address
+         *  1b. Assert ipfs_id is not already assigned to another NFT.
+         *  1c. Assert claim NFT has a valid resource address
          *  2. Assert claim NFT is redeemable based on adding a pre-determined number of days (e.g. 10) to claim_issued_on_instant field
          *  3. burn the input claim NFT
          *  4. mint new GAT with ipfs_id as its data
+         *  5. Set ipfs_id_assignments to value one for index being integer value of ipfs_id
          * Returns a GAT NFT
          */
         pub fn mint_gat_given_claim_nft(&mut self, claim_nft_bucket: NonFungibleBucket, ipfs_id: String) -> Bucket {
 
             // 1.
 
-            // 1a.
             let ipfs_id_u16 = ipfs_id.parse::<u16>().unwrap();
 
+            // 1a.
             assert!(ipfs_id_u16 >= 1 && ipfs_id_u16 <= 10000,
                 "[ERR_INVALID_IPFS_ID_RANGE] Invalid range for ipfs_id provided, must be between 1 and 10000!");
+
             // 1b.
+            assert!(self.ipfs_id_assignments[ipfs_id_u16 as usize] == 0, 
+                "[ERR_IPFS_ID_ALREADY_ASSIGNED] IPFS_ID provided is already assigned to another NFT!"); 
+
+            // 1c.
             assert!(claim_nft_bucket.resource_address() == self.claim_badge_resource_manager.address(), 
                 "[ERR_INVALID_CLAIM_NFT] Invalid claim NFT provided!");
             
@@ -218,7 +235,7 @@ mod genesis_avatar {
 
             let data: ClaimData = claim_nft.data();
             let claim_issued_on_instant: Instant = data.issued_on_instant;
-            let claimable_after_instant = claim_issued_on_instant; //.add_days(3).unwrap();
+            let claimable_after_instant = claim_issued_on_instant.add_days(3).unwrap();
             let claim_redeemable_on_instant: Instant = claimable_after_instant; 
             // 2.
             assert!(Clock::current_time_is_at_or_after(claim_redeemable_on_instant, TimePrecision::Minute), 
@@ -231,6 +248,9 @@ mod genesis_avatar {
             let new_gat_data = GatData {
                 ipfs_id: ipfs_id
             };
+
+            // 5.
+            self.ipfs_id_assignments[ipfs_id_u16 as usize] = 1;
 
             self.gat_resource_manager.mint_ruid_non_fungible(new_gat_data)
         }

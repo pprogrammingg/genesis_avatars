@@ -28,8 +28,9 @@ Returns claim NFT to the user.
 
 # TODO
 
-- [bug] One extra claim is minted , e.g. 2 GENAV input gives 3 [fixed]
+- Use array to track what ipfs value is used []
 
+- [bug] One extra claim is minted , e.g. 2 GENAV input gives 3 [fixed]
 - make function that receives Claim NFT and mints GAT [x]
 - Python env to run script locally, docs [x]
 - instantiate and fill the rest of config [x]
