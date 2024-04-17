@@ -1,17 +1,17 @@
 CALL_METHOD
     Address("account_tdx_2_129k3nexq9hmzgy0z83wwc425y7lgdwmcnj5qs7xc9nk5w4xwc7u6pd")
     "withdraw_non_fungibles"
-    Address("resource_tdx_2_1nfkcz6ckjm0xhs2fzzst9yuptxyha6378cse3n2de470tw6x62cczq")
+    Address("resource_tdx_2_1nf2la9klyf76gswsv75whh8jeu5p3dvx2kwt2n75j0vzygmttaysk2")
     Array<NonFungibleLocalId>(
         NonFungibleLocalId("<claim_ruid_1>")
     );
 
 TAKE_ALL_FROM_WORKTOP
-    Address("resource_tdx_2_1nfkcz6ckjm0xhs2fzzst9yuptxyha6378cse3n2de470tw6x62cczq")
+    Address("resource_tdx_2_1nf2la9klyf76gswsv75whh8jeu5p3dvx2kwt2n75j0vzygmttaysk2")
     Bucket("claim_nft");
 
 CALL_METHOD
-    Address("component_tdx_2_1crl29qdu8u3ng84fs9p4hp7knp5sf09apke2x4vfdgzyusk6xg09re")
+    Address("component_tdx_2_1cqg2la9h9rvalzn0qv2gkhqfzxwurveavj9l56uza3p2956p7kyaak")
     "mint_gat_given_claim_nft"
     Bucket("claim_nft")
     "123";
