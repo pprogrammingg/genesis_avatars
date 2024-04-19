@@ -124,14 +124,15 @@ def main(instantiate_transaction_id):
 
     dapp_instant_values_array = get_transaction_affected_global_entities(instantiate_transaction_id)
 
-    dapp_created_components_and_resources = filtered_array = [item for item in 
+    # only take certain enteties like component, resources and txid to populate global config
+    dapp_filtered_entity_info = [item for item in 
                                                                   dapp_instant_values_array 
                                                                     if item.startswith("component_") 
                                                                         or item.startswith("resource_")
                                                                         or item.startswith("txid_")]
 
-    print(f"dapp_created_components_and_resources is : {json.dumps(dapp_created_components_and_resources, indent=4)}\n")
-    updated_global_config = update_global_config(dapp_created_components_and_resources)
+    print(f"dapp_created_components_and_resources is : {json.dumps(dapp_filtered_entity_info, indent=4)}\n")
+    updated_global_config = update_global_config(dapp_filtered_entity_info)
 
     # overwrite global_config with updated values
     with open(CONFIG_FILE_PATH, 'w') as file:

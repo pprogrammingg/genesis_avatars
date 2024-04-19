@@ -1,0 +1,12 @@
+CALL_METHOD
+    Address("account_tdx_2_128n45xazyrymamj8v78e7uppsfyjk30vk6a6q7evezekn7qpp7yfqh")
+   "create_proof_of_amount"
+    Address("<gat_metadata_updater_badge_resource_address>")
+    Decimal("1");
+
+SET_METADATA
+    Address("<gat_resource_address>")
+    "description"
+    Enum<Metadata::String>(
+        "omnom yo"
+    );

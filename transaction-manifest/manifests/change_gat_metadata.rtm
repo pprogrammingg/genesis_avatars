@@ -1,0 +1,12 @@
+CALL_METHOD
+    Address("account_tdx_2_128n45xazyrymamj8v78e7uppsfyjk30vk6a6q7evezekn7qpp7yfqh")
+   "create_proof_of_amount"
+    Address("resource_tdx_2_1t4lqpg4g6dmssp6kmrhdwxf7pcmz0jrldqvw9pxuly4ncfsm764dlg")
+    Decimal("1");
+
+SET_METADATA
+    Address("resource_tdx_2_1nfsmfl67jcttqxylz906wwdaphrx94nd39p68k947jkmfzq2c0kz6v")
+    "description"
+    Enum<Metadata::String>(
+        "omnom yo"
+    );

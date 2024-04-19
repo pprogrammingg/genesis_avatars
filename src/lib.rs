@@ -110,6 +110,7 @@ mod genesis_avatar {
                         "name" => "TGENAV".to_owned(), locked;
                         "symbol" => "TGENAV".to_owned(), locked;
                         "description" => "Used to test GENAV".to_owned(), locked;
+                        "ipfs_base_url" => "some_base_url".to_owned(), updatable;
                     }
                 ))
                 .mint_roles(mint_roles! {
