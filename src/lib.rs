@@ -3,6 +3,7 @@ use scrypto::prelude::*;
 #[derive(ScryptoSbor, NonFungibleData)]
 pub struct GatData {
     ipfs_id: String,
+    key_image_url: Url,
 }
 
 #[derive(ScryptoSbor, NonFungibleData)]
@@ -71,6 +72,8 @@ mod genesis_avatar {
                         "name" => "Genesis Avatar Token".to_owned(), locked;
                         "symbol" => "GAT".to_owned(), locked;
                         "description" => "Genesis Avatar NFT which are playable NFTs in the game".to_owned(), locked;
+                        "storage_base_string_path" => "https://bafybeidlkfdgoecgjdbxrowecqsqd7nidb5jtfbfoiqertxq5q6zqxpqz4.ipfs.nftstorage.link".to_owned(), updatable;
+                        "icon_url" => Url::of("https://bafybeidlkfdgoecgjdbxrowecqsqd7nidb5jtfbfoiqertxq5q6zqxpqz4.ipfs.nftstorage.link/av1678.png"), updatable;
                     }
                 })
                 .mint_roles(mint_roles! {
@@ -110,7 +113,6 @@ mod genesis_avatar {
                         "name" => "TGENAV".to_owned(), locked;
                         "symbol" => "TGENAV".to_owned(), locked;
                         "description" => "Used to test GENAV".to_owned(), locked;
-                        "ipfs_base_url" => "some_base_url".to_owned(), updatable;
                     }
                 ))
                 .mint_roles(mint_roles! {
@@ -210,14 +212,15 @@ mod genesis_avatar {
          *  1c. Assert claim NFT has a valid resource address
          *  2. Assert claim NFT is redeemable based on adding a pre-determined number of days (e.g. 10) to claim_issued_on_instant field
          *  3. burn the input claim NFT
-         *  4. mint new GAT with ipfs_id as its data
+         *  4. mint new GAT with `ipfs_id`` and `key_image_url`` as its data
+         *  Note: calcualte key_image_url via GAT Resource Manager `storage_base_string_path` and file name 
+         *  consisting of some fixed characters and `ipfs_id`
          *  5. Set ipfs_id_assignments to value one for index being integer value of ipfs_id
          * Returns a GAT NFT
          */
         pub fn mint_gat_given_claim_nft(&mut self, claim_nft_bucket: NonFungibleBucket, ipfs_id: String) -> Bucket {
 
             // 1.
-
             let ipfs_id_u16 = ipfs_id.parse::<u16>().unwrap();
 
             // 1a.
@@ -236,7 +239,7 @@ mod genesis_avatar {
 
             let data: ClaimData = claim_nft.data();
             let claim_issued_on_instant: Instant = data.issued_on_instant;
-            let claimable_after_instant = claim_issued_on_instant.add_days(3).unwrap();
+            let claimable_after_instant = claim_issued_on_instant; //.add_days(3).unwrap();
             let claim_redeemable_on_instant: Instant = claimable_after_instant; 
             // 2.
             assert!(Clock::current_time_is_at_or_after(claim_redeemable_on_instant, TimePrecision::Minute), 
@@ -246,8 +249,12 @@ mod genesis_avatar {
             claim_nft_bucket.burn();
 
             // 4.
+            let nft_file_name = format!("av{}.png", ipfs_id);
+            let storage_base_string_path: String = self.gat_resource_manager.get_metadata("storage_base_string_path").unwrap().unwrap();
+            let key_image_string_path = format!("{}/{}", storage_base_string_path, nft_file_name);
             let new_gat_data = GatData {
-                ipfs_id: ipfs_id
+                ipfs_id: ipfs_id,
+                key_image_url: Url::of(key_image_string_path),
             };
 
             // 5.

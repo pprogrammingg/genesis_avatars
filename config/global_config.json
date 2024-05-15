@@ -1,11 +1,11 @@
 {
     "dapp_instant_info": {
-        "instantiate_transaction_id": "txid_tdx_2_1pdh35mn8dhsgya3plxzh6wa9et3nvm3kx050dyyzm8eyu226ha9q357ld6",
-        "component_address": "component_tdx_2_1crshxur65lrrnd6xh74cjtn9kqxqeylc02d0zfrwlda606lyyumjgc",
-        "gat_metadata_updater_badge_resource_address": "resource_tdx_2_1t4lqpg4g6dmssp6kmrhdwxf7pcmz0jrldqvw9pxuly4ncfsm764dlg",
-        "gat_resource_address": "resource_tdx_2_1nfsmfl67jcttqxylz906wwdaphrx94nd39p68k947jkmfzq2c0kz6v",
-        "claim_badge_resource_address": "resource_tdx_2_1ntmdffvdd988yzykcm382n6ykd3gq29mnmh592f05fypxkql99sltp",
-        "test_genav_token_resource_address": "resource_tdx_2_1t4zys8ddfc8yyqr73ysk69nl8mkk4083q7ed6vrywzmflm9w6dl5mu"
+        "instantiate_transaction_id": "txid_tdx_2_1klnn8hgmch7ngd9agdjwzkysgrl5h90az4g9zk0ntwtzmtdlk37qvtn0xh",
+        "component_address": "component_tdx_2_1crxpemqfq42jg44sxrt9f7d54n62c6jnsv66dskt22xj5ndjmfwfzq",
+        "gat_metadata_updater_badge_resource_address": "resource_tdx_2_1th4y936anx8hlkjsmguha0mdwpa27n33gdj6w5ztzq4qderlp55x2l",
+        "gat_resource_address": "resource_tdx_2_1ngeujy2j5y5vt4ld0xhm6nkuguxwj996q3wsytj2fvdnuqjfa69945",
+        "claim_badge_resource_address": "resource_tdx_2_1n296juwsdnzha9v4ejxvhp7cf6wktwgztvs50jxkj8gs5x25v9kuun",
+        "test_genav_token_resource_address": "resource_tdx_2_1thrg766ch9xlq57vcmvfczjr0xptee8zquv6qh9l728jwkfz94wkp8"
     },
     "dapp_accounts": {
         "user_a_account_address": "account_tdx_2_129k3nexq9hmzgy0z83wwc425y7lgdwmcnj5qs7xc9nk5w4xwc7u6pd",
@@ -13,8 +13,8 @@
         "dapp_owner_account_address": "account_tdx_2_128n45xazyrymamj8v78e7uppsfyjk30vk6a6q7evezekn7qpp7yfqh"
     },
     "package_info": {
-        "package_address": "package_tdx_2_1p4axq7g3y3pnj7xs627l22zrnschzgc64crw9lkxz0pajgs740wtd5",
-        "package_owner_badge_address": "resource_tdx_2_1nfxxxxxxxxxxpkgwnrxxxxxxxxx002558553505xxxxxxxxxfzgzzk"
+        "package_address": "package_tdx_2_1pkk39lumsjds4wflj8h4l46pgytwjgdt9e3j5ll7vwz4n7v0cmrewt",
+        "package_owner_badge_address": ""
     },
     "xrd_resource_address": "resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc",
     "gateway_url_base": {
