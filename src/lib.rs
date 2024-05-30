@@ -2,7 +2,7 @@ use scrypto::prelude::*;
 
 #[derive(ScryptoSbor, NonFungibleData)]
 pub struct GatData {
-    ipfs_id: String,
+    token_id: String,
     key_image_url: Url,
 }
 
@@ -21,7 +21,7 @@ mod genesis_avatar {
         claim_badge_resource_manager: ResourceManager,
         claimable_after_days: u8,
         sequence: u16,
-        ipfs_id_assignments: [u16; 10001],
+        token_id_assignments: [u16; 10001],
         test_genav_resource_manager: ResourceManager,
     }
 
@@ -135,11 +135,11 @@ mod genesis_avatar {
                 claim_badge_resource_manager,
                 claimable_after_days: 3u8,
                 sequence: 0u16,
-                // ipfs_id_assignments : initialize with 0. Value of 0 means ipfs_id not assigned, 1 means assigned. 
+                // token_id_assignments : initialize with 0. Value of 0 means token_id not assigned, 1 means assigned. 
                 // Using 10_001 as array length helps, since we can set 1 or 0 for indecies 0 through 10000. This way,
-                // can check ipfs_id_assignments[123] or ipfs_id_assignments[10000] without any other index manipulation. 
-                // Note: ipfs_id_assignments[0] is not important.
-                ipfs_id_assignments: [0; 10001], 
+                // can check token_id_assignments[123] or token_id_assignments[10000] without any other index manipulation. 
+                // Note: token_id_assignments[0] is not important.
+                token_id_assignments: [0; 10001], 
                 test_genav_resource_manager,
             }
             .instantiate()
@@ -205,31 +205,31 @@ mod genesis_avatar {
         }
 
         /** 
-         * Given a claim NFT and ipfs_id
+         * Given a claim NFT and token_id
          *  1. Validations
-         *  1a. Assert ipfs_id is between 1 and 10000 inclusive
-         *  1b. Assert ipfs_id is not already assigned to another NFT.
+         *  1a. Assert token_id is between 1 and 10000 inclusive
+         *  1b. Assert token_id is not already assigned to another NFT.
          *  1c. Assert claim NFT has a valid resource address
          *  2. Assert claim NFT is redeemable based on adding a pre-determined number of days (e.g. 10) to claim_issued_on_instant field
          *  3. burn the input claim NFT
-         *  4. mint new GAT with `ipfs_id`` and `key_image_url`` as its data
+         *  4. mint new GAT with `token_id` and `key_image_url` as its data
          *  Note: calcualte key_image_url via GAT Resource Manager `storage_base_string_path` and file name 
-         *  consisting of some fixed characters and `ipfs_id`
-         *  5. Set ipfs_id_assignments to value one for index being integer value of ipfs_id
+         *  consisting of some fixed characters and `token_id`
+         *  5. Set token_id_assignments to value one for index being integer value of token_id
          * Returns a GAT NFT
          */
-        pub fn mint_gat_given_claim_nft(&mut self, claim_nft_bucket: NonFungibleBucket, ipfs_id: String) -> Bucket {
+        pub fn mint_gat_given_claim_nft(&mut self, claim_nft_bucket: NonFungibleBucket, token_id: String) -> Bucket {
 
             // 1.
-            let ipfs_id_u16 = ipfs_id.parse::<u16>().unwrap();
+            let token_id_u16 = token_id.parse::<u16>().unwrap();
 
             // 1a.
-            assert!(ipfs_id_u16 >= 1 && ipfs_id_u16 <= 10000,
-                "[ERR_INVALID_IPFS_ID_RANGE] Invalid range for ipfs_id provided, must be between 1 and 10000!");
+            assert!(token_id_u16 >= 1 && token_id_u16 <= 10000,
+                "[ERR_INVALID_token_id_RANGE] Invalid range for token_id provided, must be between 1 and 10000!");
 
             // 1b.
-            assert!(self.ipfs_id_assignments[ipfs_id_u16 as usize] == 0, 
-                "[ERR_IPFS_ID_ALREADY_ASSIGNED] IPFS_ID provided is already assigned to another NFT!"); 
+            assert!(self.token_id_assignments[token_id_u16 as usize] == 0, 
+                "[ERR_token_id_ALREADY_ASSIGNED] token_id provided is already assigned to another NFT!"); 
 
             // 1c.
             assert!(claim_nft_bucket.resource_address() == self.claim_badge_resource_manager.address(), 
@@ -249,16 +249,18 @@ mod genesis_avatar {
             claim_nft_bucket.burn();
 
             // 4.
-            let nft_file_name = format!("av{}.png", ipfs_id);
-            let storage_base_string_path: String = self.gat_resource_manager.get_metadata("storage_base_string_path").unwrap().unwrap();
+            let nft_file_name = format!("av{}.png", token_id);
+            let storage_base_string_path: String = self.gat_resource_manager.get_metadata("storage_base_string_path")
+                                                                            .unwrap()
+                                                                            .unwrap_or_else(|| { "www.hotmail.com".to_owned() }); 
             let key_image_string_path = format!("{}/{}", storage_base_string_path, nft_file_name);
             let new_gat_data = GatData {
-                ipfs_id: ipfs_id,
+                token_id: token_id,
                 key_image_url: Url::of(key_image_string_path),
             };
 
             // 5.
-            self.ipfs_id_assignments[ipfs_id_u16 as usize] = 1;
+            self.token_id_assignments[token_id_u16 as usize] = 1;
 
             self.gat_resource_manager.mint_ruid_non_fungible(new_gat_data)
         }

@@ -1,11 +1,11 @@
 {
     "dapp_instant_info": {
-        "instantiate_transaction_id": "txid_tdx_2_1klnn8hgmch7ngd9agdjwzkysgrl5h90az4g9zk0ntwtzmtdlk37qvtn0xh",
-        "component_address": "component_tdx_2_1crxpemqfq42jg44sxrt9f7d54n62c6jnsv66dskt22xj5ndjmfwfzq",
-        "gat_metadata_updater_badge_resource_address": "resource_tdx_2_1th4y936anx8hlkjsmguha0mdwpa27n33gdj6w5ztzq4qderlp55x2l",
-        "gat_resource_address": "resource_tdx_2_1ngeujy2j5y5vt4ld0xhm6nkuguxwj996q3wsytj2fvdnuqjfa69945",
-        "claim_badge_resource_address": "resource_tdx_2_1n296juwsdnzha9v4ejxvhp7cf6wktwgztvs50jxkj8gs5x25v9kuun",
-        "test_genav_token_resource_address": "resource_tdx_2_1thrg766ch9xlq57vcmvfczjr0xptee8zquv6qh9l728jwkfz94wkp8"
+        "instantiate_transaction_id": "txid_tdx_2_1jl4c6ustly3whhfs8dwfweknh4em08rstt305ea0jgkxw6qp4mlq6u9pqh",
+        "component_address": "component_tdx_2_1cz90797gcexr0l7ceegnllg6ag276dn25mzlpgt9gcj90psuafq2mk",
+        "gat_metadata_updater_badge_resource_address": "resource_tdx_2_1t4vetzayy8stys8ekefm480y0w029pyr9uvy484h4506vyz3rthjx4",
+        "gat_resource_address": "resource_tdx_2_1nfxtxgqqll4z865e6y3fxzcqkq9e6vaq8s353fmepwwtl5nng56gf8",
+        "claim_badge_resource_address": "resource_tdx_2_1ng7skgfmcqnsuef59fcr2j723zxm4x2r87pqjp22lrwmffhj0xv8t8",
+        "test_genav_token_resource_address": "resource_tdx_2_1tktpvfaqcyrd6d62per68awmyqm2dzl2dt3h85cp09ytxvkpk3km3a"
     },
     "dapp_accounts": {
         "user_a_account_address": "account_tdx_2_129k3nexq9hmzgy0z83wwc425y7lgdwmcnj5qs7xc9nk5w4xwc7u6pd",
@@ -13,7 +13,7 @@
         "dapp_owner_account_address": "account_tdx_2_128n45xazyrymamj8v78e7uppsfyjk30vk6a6q7evezekn7qpp7yfqh"
     },
     "package_info": {
-        "package_address": "package_tdx_2_1pkk39lumsjds4wflj8h4l46pgytwjgdt9e3j5ll7vwz4n7v0cmrewt",
+        "package_address": "package_tdx_2_1phhmzp5pqpq7g73408dvdh7n62ny5ag6w3tae9yykpxs4xg4euapv5",
         "package_owner_badge_address": ""
     },
     "xrd_resource_address": "resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc",

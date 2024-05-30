@@ -24,7 +24,38 @@ Returns claim NFT to the user.
 
 # Package Deployment
 
+- Update config via run script.
 
+Pre-requisites: Python virtual evn is needed to run python scripts. Use terminal in the root folder run:
+
+```
+    python3 -m venv .venv
+``` 
+and 
+
+```
+    source .venv/bin/activate
+```
+
+Run
+
+```
+    which python
+```
+
+To make sure you are using virtual env.
+
+
+# Troubleshooting
+- Some times one can run some tests for example in sitatuin where transaction manifest run from the console shows some hexadecimal string being in the error. if it is NodeId(some hex text), most likely can be converted to a bech32 address (those that start with `resource_`, `component_` etc)
+
+see commented out tests for sample conversion. Also, run test with 
+
+```
+ cargo test -- --nocapture
+```
+
+to be able ot use `println!`.
 
 # TODO
 
